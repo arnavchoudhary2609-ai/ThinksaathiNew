@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThinkSaathi - Because No Thought Should Be Faced Alone</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="ThinkSaathi is an empathetic student well-being companion designed specifically for teenagers to navigate overthinking, stress, self-doubt, academic pressure, and loneliness through guided conversations and practical Indian-inspired mindfulness tools.">
+  <meta name="keywords" content="student well-being, overthinking, teenager stress, mental clarity, mindfulness, pranayama, anulom vilom, bhramari, breathing exercises, exam stress, peer pressure">
+  <meta name="author" content="ThinkSaathi Team">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Social Sharing Meta -->
+  <meta property="og:title" content="ThinkSaathi - Student Well-Being Companion">
+  <meta property="og:description" content="An AI-powered companion helping teens untangle overthinking and find calm with simple mindfulness tools.">
+  <meta property="og:type" content="website">
+  
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- ONBOARDING WELCOME MODAL (first-visit only) -->
+  <div class="onboarding-overlay" id="onboarding-overlay" style="display:none;">
+    <div class="onboarding-modal">
+      <span class="onboarding-emoji">🌱</span>
+      <h2>Welcome to ThinkSaathi</h2>
+      <p>Because No Thought Should Be Faced Alone.<br><br>This is your private, judgment-free space. No account, no data shared — just you and your thoughts.</p>
+      <input type="text" class="onboarding-name-input" id="onboarding-name-input" placeholder="What should I call you? (optional)" maxlength="30" autocomplete="off">
+      <button class="btn-primary" id="onboarding-start-btn" style="width:100%; justify-content:center;">
+        Let's begin 🚀
+      </button>
+      <p class="onboarding-disclaimer">🔒 Everything stays on your device. We never store, share, or access your reflections.</p>
+    </div>
+  </div>
+
+  <!-- FIXED APP HEADER -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="brand" id="brand-home-link" aria-label="ThinkSaathi Logo Link">
+        <!-- Calming Leaf + Spiral Mind Custom SVG Logo -->
+        <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Lotus Motif -->
+          <path d="M12 3c-1 3-3 8-3 12c0 2 1.3 3 3 3s3-1 3-3c0-4-2-9-3-12Z" fill="var(--primary-glow)"/>
+          <path d="M12 15c-3 0-7-2-8-6c1 0 5 1 8 6Z" />
+          <path d="M12 15c3 0 7-2 8-6c-1 0-5 1-8 6Z" />
+        </svg>
+        <span class="brand-name">ThinkSaathi</span>
+      </a>
+      
+      <!-- Desktop Navigation Menu (hidden on mobile) -->
+      <nav class="desktop-nav" aria-label="Desktop Navigation">
+        <button class="tab-btn active" data-view="home">Home</button>
+        <button class="tab-btn" data-view="chat">Saathi Chat</button>
+        <button class="tab-btn" data-view="clarity">Clarity</button>
+        <button class="tab-btn" data-view="journal">Journal</button>
+        <button class="tab-btn" data-view="reset">Resets</button>
+      </nav>
+
+      <!-- Safe Space Crisis Support Button -->
+      <button class="safety-btn" id="safety-alert-btn" aria-haspopup="dialog" aria-label="Crisis Helplines Info">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        Crisis Support
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN APP PANELS (Single-Page View Controller) -->
+  <main>
+
+    <!-- ==================== VIEW 1: HOME DASHBOARD ==================== -->
+    <section id="view-home" class="view-panel active">
+      
+      <!-- 1. Hero Section -->
+      <div class="hero-card">
+        <div class="hero-illustration">
+          <img src="./assets/images/hero_lotus.png" alt="Glowing Lotus Digital Sanctuary" style="max-width: 100%; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);">
+        </div>
+        <h1 class="hero-headline">Because No Thought Should Be Faced Alone.</h1>
+        <p class="hero-subhead">
+          ThinkSaathi is your private digital sanctuary. A safe, calming space to navigate overthinking, stress, and find clarity.
+        </p>
+        <div class="hero-ctas">
+          <button class="btn-primary" id="hero-start-chat-btn" aria-label="Start empathetic chat">
+            Start a Conversation
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Daily Wisdom -->
+      <div class="daily-wisdom-card">
+        <div class="wisdom-header">✨ Today's Wisdom</div>
+        <div class="wisdom-quote" id="daily-quote-text">"You have the right to action, not to the fruits of action."</div>
+        <div class="wisdom-author" id="daily-quote-author">— Bhagavad Gita</div>
+        <div class="wisdom-reflection">
+          <strong>Reflection:</strong> <span id="daily-quote-reflection">Focus on what you can control today and let go of what you cannot.</span>
+        </div>
+      </div>
+
+      <!-- 3. Mood Check-In -->
+      <div class="mood-box">
+        <h3 class="mood-title">How are you feeling today?</h3>
+        <div class="mood-options">
+          <button class="mood-btn" data-mood="happy">😊<span>Happy</span></button>
+          <button class="mood-btn" data-mood="calm">😌<span>Calm</span></button>
+          <button class="mood-btn" data-mood="stressed">😔<span>Stressed</span></button>
+          <button class="mood-btn" data-mood="overwhelmed">😟<span>Overwhelmed</span></button>
+          <button class="mood-btn" data-mood="tired">😴<span>Tired</span></button>
+        </div>
+      </div>
+
+      <!-- 4. Emotional Wellness Tools -->
+      <div class="tools-section">
+        <h3 class="section-title">Your Sanctuary Tools</h3>
+        <div class="tools-grid">
+          <div class="tool-card" onclick="document.querySelector('.tab-btn[data-view=\'chat\']').click()">
+            <h4>💬 Saathi Chat</h4>
+            <p>A private, empathetic companion.</p>
+          </div>
+          <div class="tool-card" onclick="document.querySelector('.tab-btn[data-view=\'clarity\']').click()">
+            <h4>✨ Thought Clarity</h4>
+            <p>Untangle your cognitive spirals.</p>
+          </div>
+          <div class="tool-card" onclick="document.querySelector('.tab-btn[data-view=\'journal\']').click()">
+            <h4>📓 Private Journal</h4>
+            <p>Write freely, without judgment.</p>
+          </div>
+          <div class="tool-card" onclick="document.querySelector('.tab-btn[data-view=\'reset\']').click()">
+            <h4>🌿 5-Minute Resets</h4>
+            <p>Breathe and find immediate calm.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Lotus Journey Progress -->
+      <div class="lotus-journey-section">
+        <h3 class="section-title">Your Inner Journey</h3>
+        <div class="journey-visual">
+          <div class="journey-stage active">🌱<span>Seed</span></div>
+          <div class="journey-line"></div>
+          <div class="journey-stage">🌿<span>Growing Mind</span></div>
+          <div class="journey-line"></div>
+          <div class="journey-stage">🌸<span>Blooming Lotus</span></div>
+        </div>
+        <p class="journey-desc">Every moment of reflection helps your resilience grow.</p>
+      </div>
+
+      <!-- 6. Community (Coming Soon) -->
+      <div class="community-placeholder-section">
+        <h3 class="section-title">ThinkSaathi Community</h3>
+        <span class="coming-soon-badge">Coming Soon</span>
+        <p>A supportive future space for student reflections, wellness discussions, and shared growth.</p>
+      </div>
+
+      <!-- Direct Disclaimer Box -->
+      <div class="disclaimer-card">
+        <div class="disclaimer-title">Clinical Disclaimer</div>
+        ThinkSaathi is an emotional wellness companion, not a therapy platform or substitute for professional medical care, clinical diagnosis, or emergency mental health crisis support. If you are experiencing serious harm or crisis, please seek immediate help from a counselor or utilize our top-right **Crisis Support** resources.
+      </div>
+    </section>
+
+
+    <!-- ==================== VIEW 2: AI COMPANION ==================== -->
+    <section id="view-chat" class="view-panel">
+      <div class="chat-wrapper">
+        <div class="chat-header">
+          <div class="chat-avatar" aria-hidden="true">💬</div>
+          <div class="chat-meta">
+            <h3>Empathetic AI Companion</h3>
+            <p>Always listening, zero judgment</p>
+          </div>
+        </div>
+
+        <div class="chat-history" id="chat-scroller" role="log" aria-live="polite">
+          <div class="chat-welcome">
+            <div class="chat-welcome-emoji">👋</div>
+            <h4 style="font-family: var(--font-header); font-size: 1.15rem; margin-bottom: 0.25rem;">Hey, I'm Saathi!</h4>
+            <p class="chat-welcome-text">
+              Whether you are overthinking an exam, feeling lonely, spiraling about future choices, or just need to vent—I'm here for you. What's on your mind?
+            </p>
+          </div>
+          
+          <div class="chat-suggestions" id="chat-presets-container">
+            <button class="chat-suggestion-btn" data-text="I can't stop overthinking what they said to me...">
+              💭 "I can't stop overthinking a recent conversation..."
+            </button>
+            <button class="chat-suggestion-btn" data-text="I'm feeling so overwhelmed about my upcoming exams and study load...">
+              📚 "Exams and study pressure are making my head spin..."
+            </button>
+            <button class="chat-suggestion-btn" data-text="I feel really lonely and out of place, like everyone else has it all figured out...">
+              👥 "I feel lonely and left out of my social circle..."
+            </button>
+            <button class="chat-suggestion-btn" data-text="I keep doubting myself and worrying that I'm going to fail at everything...">
+              😟 "I'm experiencing deep self-doubt and fear of failure..."
+            </button>
+          </div>
+          
+          <!-- Typing loading state dot indicators -->
+          <div class="chat-typing" id="ai-typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="user-chat-input" placeholder="Type what's on your mind..." aria-label="Type message to AI Companion"></textarea>
+          <button class="chat-send-btn" id="send-chat-btn" aria-label="Send message">
+            <svg viewBox="0 0 24 24">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== VIEW 3: THOUGHT CLARITY (Signature Tool) ==================== -->
+    <section id="view-clarity" class="view-panel">
+      <div class="clarity-wrapper">
+        <div class="clarity-header">
+          <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem;">Thought Clarity Tool</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Guided cognitive reframing to untangle spirals and regain calm perspective.</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="clarity-steps-indicator" role="navigation" aria-label="Reflection Steps Progress">
+          <div class="clarity-steps-line"></div>
+          <div class="clarity-step-dot active" data-step="1">1</div>
+          <div class="clarity-step-dot" data-step="2">2</div>
+          <div class="clarity-step-dot" data-step="3">3</div>
+          <div class="clarity-step-dot" data-step="4">4</div>
+        </div>
+
+        <!-- STAGE 1: THE WORRY -->
+        <div class="clarity-card-stage active" data-stage="1">
+          <h3 class="clarity-label">Step 1: Write Down the Worry</h3>
+          <p class="clarity-helper">Venting your raw, unedited thoughts on paper gets the spiral out of your head. What's the looping loop that won't stop playing?</p>
+          <textarea class="clarity-textarea" id="clarity-worry-input" placeholder="e.g. I failed my class prep test today. Now I'm totally convinced I will fail the final boards, never get into a good college, and ruin my future..."></textarea>
+          <div class="clarity-nav-row">
+            <button class="btn-clarity-nav next" data-target="2" id="clarity-btn-1">Next Step</button>
+          </div>
+        </div>
+
+        <!-- STAGE 2: FACT VS. ASSUMPTION -->
+        <div class="clarity-card-stage" data-stage="2">
+          <h3 class="clarity-label">Step 2: Separate Facts from Assumptions</h3>
+          <p class="clarity-helper">Our overthinking mind loves to treat scary assumptions as solid facts. Let's separate them. What is the actual, unarguable truth here? What is just a scary 'what-if' guess?</p>
+          <textarea class="clarity-textarea" id="clarity-facts-input" placeholder="e.g. FACT: I got a low mark on one small prep test. ASSUMPTION: That I will fail everything, ruin my future, and that one mark defines all my capabilities."></textarea>
+          <div class="clarity-nav-row">
+            <button class="btn-clarity-nav back" data-target="1">Back</button>
+            <button class="btn-clarity-nav next" data-target="3" id="clarity-btn-2">Challenge Thought</button>
+          </div>
+        </div>
+
+        <!-- STAGE 3: PERSPECTIVE REFRAME -->
+        <div class="clarity-card-stage" data-stage="3">
+          <h3 class="clarity-label">Step 3: Reframe Your Perspective</h3>
+          <p class="clarity-helper">If your best friend came to you with this exact same worry, what warm, supportive, and realistic advice would you give them?</p>
+          <textarea class="clarity-textarea" id="clarity-reframe-input" placeholder="e.g. I would tell them: Hey, it's just one test, not the end of the world. You had a bad day, but you are smart and have plenty of time to prepare. Don't let one grade steal your peace."></textarea>
+          <div class="clarity-nav-row">
+            <button class="btn-clarity-nav back" data-target="2">Back</button>
+            <button class="btn-clarity-nav next" data-target="4" id="clarity-btn-3">Gain Perspective</button>
+          </div>
+        </div>
+
+        <!-- STAGE 4: ACTION / LETTING GO -->
+        <div class="clarity-card-stage" data-stage="4">
+          <h3 class="clarity-label">Step 4: Release or Take One Small Action</h3>
+          <p class="clarity-helper">You cannot solve everything at once. What is one tiny, practical step you can take today? Or is this something completely outside your control that you are ready to let go of?</p>
+          <textarea class="clarity-textarea" id="clarity-action-input" placeholder="e.g. Action: I will review the three questions I missed on today's test. Or Release: I let go of having to be perfect all the time. I will close my book and get an extra hour of sleep tonight."></textarea>
+          <div class="clarity-nav-row">
+            <button class="btn-clarity-nav back" data-target="3">Back</button>
+            <button class="btn-clarity-nav next" style="background: var(--primary);" id="btn-save-clarity">Save & Clear Mind</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post-Clarity Saathi Reflection -->
+      <div class="clarity-reflection-card" id="clarity-reflection-card">
+        <div class="clarity-reflection-label">✨ Saathi's Reflection for You</div>
+        <div class="clarity-reflection-text" id="clarity-reflection-text"></div>
+      </div>
+
+      <!-- List of Saved Clarity Reflections -->
+      <h3 class="clarity-history-title" id="archive-section-head">Your Private Reflections Archive</h3>
+      <div class="clarity-history-list" id="clarity-logs-container">
+        <!-- Injected dynamically from LocalStorage -->
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 2rem 1rem; border: 1px dashed var(--border-light); border-radius: var(--radius-md); background: white;">
+          📋 Your completed Thought Clarity sessions will be saved here securely.
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== VIEW 4: 5-MINUTE RESET ==================== -->
+    <section id="view-reset" class="view-panel">
+      
+      <!-- SESSION GRID LIST -->
+      <div id="reset-selection-panel">
+        <div class="reset-intro">
+          <h2 style="font-size: 1.45rem;">Mindfulness Breathing & Resets</h2>
+          <p>Simple, powerful Indian pranayama and somatic practices to slow down cognitive spirals and ground your focus.</p>
+        </div>
+
+        <div class="reset-grid">
+          
+          <!-- ANULOM VILOM (Alternate Nostril) -->
+          <div class="reset-card" data-session="anulom_vilom" role="button" tabindex="0">
+            <div class="reset-card-head">
+              <div class="reset-card-info">
+                <h3>Anulom Vilom</h3>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--secondary);">Alternate Nostril Pranayama</span>
+              </div>
+              <span class="reset-card-duration">5 Mins</span>
+            </div>
+            <p class="reset-card-desc">A highly celebrated traditional practice balancing the left and right hemispheres of the brain. Promotes quick focus and calms a racing heart.</p>
+            <div class="reset-card-benefits"><strong>Benefit:</strong> Sweeps away mental fog and restores deep nervous system equilibrium.</div>
+          </div>
+
+          <!-- BOX BREATHING -->
+          <div class="reset-card" data-session="box_breathing" role="button" tabindex="0">
+            <div class="reset-card-head">
+              <div class="reset-card-info">
+                <h3>Box Breathing</h3>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--secondary);">Four-Square Breathing</span>
+              </div>
+              <span class="reset-card-duration">5 Mins</span>
+            </div>
+            <p class="reset-card-desc">A powerful technique used to slow down your breathing and steady your nerves by inhaling, holding, exhaling, and holding for equal counts.</p>
+            <div class="reset-card-benefits"><strong>Benefit:</strong> Instantly lowers stress and increases calm concentration.</div>
+          </div>
+
+          <!-- GROUNDING EXERCISE (5-4-3-2-1) -->
+          <div class="reset-card" data-session="grounding" role="button" tabindex="0">
+            <div class="reset-card-head">
+              <div class="reset-card-info">
+                <h3>Grounding Exercise</h3>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--secondary);">5-4-3-2-1 Sensory Scan</span>
+              </div>
+              <span class="reset-card-duration">5 Mins</span>
+            </div>
+            <p class="reset-card-desc">A sensory countdown technique to bring your mind away from anxious thoughts and back to the present physical moment.</p>
+            <div class="reset-card-benefits"><strong>Benefit:</strong> Interrupts spiraling thoughts and connects you to reality.</div>
+          </div>
+
+          <!-- MINDFUL PAUSE -->
+          <div class="reset-card" data-session="mindful_pause" role="button" tabindex="0">
+            <div class="reset-card-head">
+              <div class="reset-card-info">
+                <h3>Mindful Pause</h3>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--secondary);">Simple Awareness</span>
+              </div>
+              <span class="reset-card-duration">2 Mins</span>
+            </div>
+            <p class="reset-card-desc">A brief, simple loop of bringing your attention entirely to the physical sensation of your breath without trying to change it.</p>
+            <div class="reset-card-benefits"><strong>Benefit:</strong> Provides a quick mental reset between tasks or study sessions.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ACTIVE SESSION PLAYER INTERFACE (Hidden initially) -->
+      <div id="reset-player-panel" style="display: none;">
+        <div class="session-player">
+          <button class="session-back-btn" id="player-back-btn" aria-label="Exit session to menu">
+            <svg viewBox="0 0 24 24">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          
+          <h2 class="session-name" id="current-session-title">Anulom Vilom</h2>
+          <p class="session-subtitle" id="current-session-subtitle">Alternate Nostril Breathing</p>
+          
+          <!-- Alternate Nostril Direction Cues Panel -->
+          <div class="anulom-direction-panel" id="nostril-cue-panel" style="display: none;">
+            <div class="nostril-cue" id="cue-left">Close Right, Inhale Left</div>
+            <div class="nostril-cue" id="cue-right">Close Left, Exhale Right</div>
+          </div>
+
+          <!-- Session Progress Bar -->
+          <div class="session-progress-bar">
+            <div class="session-progress-fill" id="session-progress-fill"></div>
+          </div>
+
+          <!-- Dynamic Breathing Expansion Ring -->
+          <div class="breath-outer" id="breathing-animation-container">
+            <div class="breath-circle" id="dynamic-breath-halo"></div>
+            <div class="breath-inner-label" id="breath-text-prompt">Inhale</div>
+          </div>
+
+          <div class="session-countdown" id="player-time-left">05:00</div>
+          <p class="session-benefit-reminder" id="player-instruction-caption">Gently close your right nostril with your thumb and draw air through your left nostril.</p>
+          
+          <!-- Real-time synthesized audio controls -->
+          <div class="session-controls">
+            <button class="btn-session-ctrl" id="btn-player-reset" aria-label="Restart session from beginning">
+              <svg viewBox="0 0 24 24">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+            </button>
+            
+            <button class="btn-session-ctrl play" id="btn-player-toggle" aria-label="Play or Pause session">
+              <svg viewBox="0 0 24 24" id="play-pause-svg">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </button>
+            
+            <button class="btn-session-ctrl" id="btn-player-mute" aria-label="Toggle ambient synthesis volume">
+              <svg viewBox="0 0 24 24" id="volume-toggle-svg">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ==================== VIEW 5: PRIVATE JOURNAL ==================== -->
+    <section id="view-journal" class="view-panel">
+      <div class="journal-wrapper">
+
+        <div class="journal-header">
+          <h2>📓 My Private Journal</h2>
+          <p>A space that's entirely yours. Write freely — no filters, no judgment. Everything is stored locally on your device only.</p>
+          <textarea class="journal-input-area" id="journal-input" placeholder="What's on your mind today? Write anything — a feeling, a memory, a worry, a hope..." maxlength="2000"></textarea>
+          <div class="journal-save-row">
+            <span class="journal-char-count" id="journal-char-count">0 / 2000</span>
+            <button class="btn-save-journal" id="btn-save-journal">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              </svg>
+              Save Entry
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="journal-entries-title">Past Entries</div>
+          <div class="journal-entries-list" id="journal-entries-list">
+            <div class="journal-empty-state">
+              <div class="empty-icon">📖</div>
+              Your journal entries will appear here — private and safe.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PRIVATE DISCREET FOOTER -->
+  <footer>
+    <div class="footer-logo">ThinkSaathi</div>
+    <div class="footer-tagline">Because No Thought Should Be Faced Alone.</div>
+    <div class="footer-links">
+      <a href="#about" class="footer-link" onclick="window.appRouter.switchView('home'); return false;">About</a>
+      <a href="#features" class="footer-link" onclick="window.appRouter.switchView('home'); return false;">Features</a>
+      <a href="#resources" class="footer-link" onclick="document.getElementById('safety-alert-btn').click(); return false;">Resources</a>
+      <a href="#crisis" class="footer-link" onclick="document.getElementById('safety-alert-btn').click(); return false;">Crisis Hotlines</a>
+    </div>
+    <p class="footer-copy">© 2026 ThinkSaathi well-being app. Zero registration. Private browser-based logs.</p>
+  </footer>
+
+  <!-- MOBILE-FIRST BOTTOM STICKY NAVIGATION TABS -->
+  <nav class="bottom-nav" aria-label="Primary Application Tabs Navigation">
+    <ul class="nav-tabs">
+      <li class="tab-item">
+        <button class="tab-btn active" data-view="home" aria-label="Home Dashboard">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Home
+        </button>
+      </li>
+      <li class="tab-item">
+        <button class="tab-btn" data-view="chat" aria-label="AI Companion chat">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          Saathi Chat
+        </button>
+      </li>
+      <li class="tab-item">
+        <button class="tab-btn" data-view="clarity" aria-label="Thought Clarity tools">
+          <svg viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          Clarity
+        </button>
+      </li>
+      <li class="tab-item">
+        <button class="tab-btn" data-view="journal" aria-label="Private Journal">
+          <svg viewBox="0 0 24 24">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          Journal
+        </button>
+      </li>
+      <li class="tab-item">
+        <button class="tab-btn" data-view="reset" aria-label="Mindful somatic breathing resets">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v4l3 3"></path>
+          </svg>
+          Reset
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ==================== CRISIS OVERLAY DRAWER ==================== -->
+  <dialog class="crisis-overlay" id="crisis-support-overlay">
+    <div class="crisis-drawer">
+      <div class="crisis-head">
+        <div class="crisis-title-wrap">
+          <h2>Crisis Support Services</h2>
+          <p>Please reach out if you feel unsafe or in extreme distress.</p>
+        </div>
+        <button class="crisis-close-btn" id="crisis-drawer-close" aria-label="Close crisis panel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="crisis-alert-banner">
+        <p style="margin-bottom: 0.5rem; font-size: 0.95rem;"><strong>If you are experiencing severe emotional distress, thoughts of self-harm, or feel unsafe, please seek immediate support from a trusted adult, parent, guardian, teacher, counselor, or mental health professional.</strong></p>
+        <p style="font-size: 0.85rem;">You do not have to carry this alone.</p>
+      </div>
+
+      <div class="crisis-subtitle">Emotional Wellness Helplines</div>
+      
+      <div class="helpline-grid">
+        
+        <!-- India Helplines -->
+        <div class="helpline-card">
+          <div class="helpline-info">
+            <h4>AASRA Helpline</h4>
+            <p>24/7 Professional Suicide Prevention & Distress Care</p>
+          </div>
+          <div class="helpline-call-btn">9820466726</div>
+        </div>
+
+        <div class="helpline-card">
+          <div class="helpline-info">
+            <h4>Vandrevala Foundation</h4>
+            <p>24/7 Mental Health Counseling & Guidance</p>
+          </div>
+          <div class="helpline-call-btn">9999666555</div>
+        </div>
+
+        <div class="helpline-card">
+          <div class="helpline-info">
+            <h4>KIRAN National Mental Health Helpline</h4>
+            <p>Government of India support helpline (toll-free)</p>
+          </div>
+          <div class="helpline-call-btn">1800-599-0019</div>
+        </div>
+
+        <!-- Global Helplines -->
+        <div class="helpline-card">
+          <div class="helpline-info">
+            <h4>988 Suicide & Crisis Lifeline</h4>
+            <p>Available 24/7 in USA & Canada</p>
+          </div>
+          <div class="helpline-call-btn">988</div>
+        </div>
+
+        <div class="helpline-card">
+          <div class="helpline-info">
+            <h4>Childline India</h4>
+            <p>24/7 helpline dedicated to children and youth in distress</p>
+          </div>
+          <div class="helpline-call-btn">1098</div>
+        </div>
+      </div>
+
+      <p style="font-size: 0.7rem; color: var(--text-muted); line-height: 1.4; text-align: center;">
+        These resources are fully independent of ThinkSaathi, confidential, free of cost, and handled by trained clinical professionals who want to help you.
+      </p>
+    </div>
+  </dialog>
+  <!-- Global Watermark -->
+  <svg class="global-watermark" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3c-1 3-3 8-3 12c0 2 1.3 3 3 3s3-1 3-3c0-4-2-9-3-12Z" />
+    <path d="M12 15c-3 0-7-2-8-6c1 0 5 1 8 6Z" />
+    <path d="M12 15c3 0 7-2 8-6c-1 0-5 1-8 6Z" />
+  </svg>
+
+  <!-- Loader scripts -->
+  <script src="audio.js"></script>
+  <script src="ai.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

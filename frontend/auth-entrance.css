@@ -1,0 +1,315 @@
+/* 
+ * ThinkSaathi - Cinematic Authentication Entrance 
+ */
+
+:root {
+  --auth-gradient: linear-gradient(180deg, #fef6e4 0%, #fde7b6 50%, #f4c27a 100%);
+  --auth-water: rgba(217, 187, 137, 0.4);
+  --auth-text: #3c2a1a;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+#cinematic-entrance {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--auth-gradient);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  color: var(--auth-text);
+}
+
+#cinematic-entrance.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Atmosphere & Vignette */
+.auth-atmosphere {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Particle Canvas */
+#thoughts-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Lake - base layer. Waves drawn on canvas */
+.auth-lake-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 28vh;
+  min-height: 140px;
+  z-index: 3;
+  overflow: hidden;
+
+  background: linear-gradient(
+    180deg,
+    rgba(45, 130, 120, 0.22) 0%,
+    rgba(20, 105, 95, 0.48) 55%,
+    rgba(12, 78, 72, 0.65) 100%
+  );
+
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+
+/* Moving shimmer highlight on lake surface */
+.auth-lake {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 5px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.75),
+    transparent,
+    rgba(251, 191, 36, 0.45),
+    transparent
+  );
+
+  animation: lake-shimmer 5s linear infinite;
+}
+
+@keyframes lake-shimmer {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(50%); }
+}
+
+/* Center Piece: Diya & Lotus */
+.auth-center-piece {
+  position: absolute;
+  bottom: 26vh;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* Lotus */
+.auth-lotus {
+  font-size: 2.8rem;
+  opacity: 0;
+  animation: lotus-breathe 6s ease-in-out infinite, lotus-appear 2s ease-out 0.8s forwards;
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.6));
+  line-height: 1;
+}
+
+@keyframes lotus-appear {
+  to { opacity: 0.95; }
+}
+
+@keyframes lotus-breathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50%       { transform: scale(1.06) translateY(-4px); }
+}
+
+/* Diya */
+.auth-diya {
+  font-size: 3rem;
+  line-height: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  animation: diya-flicker-emoji 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.9))
+          drop-shadow(0 0 32px rgba(245, 158, 11, 0.6));
+}
+
+/* Radiating warm glow ring beneath the diya */
+.auth-diya::before {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 22px;
+  background: radial-gradient(ellipse at center,
+    rgba(251, 191, 36, 0.7) 0%,
+    rgba(245, 158, 11, 0.3) 50%,
+    transparent 75%);
+  border-radius: 50%;
+  animation: diya-glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes diya-flicker-emoji {
+  0%   { filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.9)) drop-shadow(0 0 28px rgba(245, 158, 11, 0.5)); }
+  30%  { filter: drop-shadow(0 0 20px rgba(251, 191, 36, 1.0)) drop-shadow(0 0 40px rgba(245, 158, 11, 0.7)); }
+  60%  { filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.8)) drop-shadow(0 0 22px rgba(245, 158, 11, 0.4)); }
+  100% { filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.9)) drop-shadow(0 0 32px rgba(245, 158, 11, 0.6)); }
+}
+
+@keyframes diya-glow-pulse {
+  0%, 100% { transform: translateX(-50%) scale(1);   opacity: 0.7; }
+  50%       { transform: translateX(-50%) scale(1.3); opacity: 1; }
+}
+
+/* Main Content: Namaste & CTA */
+.auth-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  max-width: 600px;
+  padding: 2rem;
+  margin-top: -10vh;
+}
+
+.auth-namaste {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fade-up 1.5s ease forwards 1.5s;
+}
+
+.auth-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fade-up 1.5s ease forwards 2.5s;
+  letter-spacing: -0.02em;
+}
+
+.auth-tagline {
+  font-size: 1.1rem;
+  font-weight: 400;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fade-up 1.5s ease forwards 3.5s;
+  margin-bottom: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-support-message {
+  font-size: 0.95rem;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fade-up 1.5s ease forwards 4.5s;
+  margin-bottom: 2.5rem;
+  color: rgba(60, 42, 26, 0.8);
+}
+
+.auth-cta-wrapper {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fade-up 1.5s ease forwards 5.5s;
+}
+
+/* Premium Google Button */
+.auth-google-btn {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 30px;
+  padding: 0.9rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--auth-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-google-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.auth-google-btn:active {
+  transform: translateY(1px);
+}
+
+.auth-google-icon {
+  font-weight: 800;
+  color: #4285F4;
+  font-size: 1.2rem;
+}
+
+.auth-error-msg {
+  color: #d9534f;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  min-height: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Trust Indicators */
+.auth-trust-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  opacity: 0.6;
+}
+
+.auth-trust-item {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@keyframes fade-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .auth-lake-container { height: 25vh; }
+  .auth-center-piece { bottom: 18vh; }
+  .auth-title { font-size: 2rem; }
+  .auth-content { padding: 1.5rem; margin-top: -15vh; }
+  .auth-trust-indicators { flex-direction: column; gap: 0.5rem; align-items: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-lake, .auth-lotus, .auth-diya-glow, .auth-namaste, .auth-title, .auth-tagline, .auth-support-message, .auth-cta-wrapper {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -2237,10 +2237,146 @@ button, .tab-btn, .mood-btn, .btn-primary, .safety-btn {
 .breath-outer.inhale {
   animation: breath-expand 4s ease-in-out forwards;
 }
-.breath-outer.inhale .breath-circle {
-  box-shadow: 0 0 50px rgba(16, 185, 129, 0.5), 0 0 100px rgba(16, 185, 129, 0.2);
+/* =========================================
+   LOTUS BREATHING VISUAL
+   ========================================= */
+
+.lotus-breath-visual {
+  width: 190px;
+  height: 190px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.lotus-glow {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.12);
+  filter: blur(18px);
+  transition: all 4s ease;
+}
+
+.lotus {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  transition: transform 4s ease;
+}
+
+/* Individual petals */
+.petal {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 42px;
+  height: 78px;
+  border-radius: 50% 50% 45% 45%;
+  transform-origin: 50% 100%;
+  background: linear-gradient(180deg, #f9a8d4, #c084fc);
+  opacity: 0.9;
+  transition: transform 4s ease, opacity 4s ease;
+}
+
+.petal-1 {
+  transform: translateX(-50%) rotate(0deg);
+}
+
+.petal-2 {
+  transform: translateX(-50%) rotate(60deg);
+}
+
+.petal-3 {
+  transform: translateX(-50%) rotate(120deg);
+}
+
+.petal-4 {
+  transform: translateX(-50%) rotate(180deg);
+}
+
+.petal-5 {
+  transform: translateX(-50%) rotate(240deg);
+}
+
+.petal-6 {
+  transform: translateX(-50%) rotate(300deg);
+}
+
+.lotus-center {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #d7b4e2;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.55);
+  z-index: 5;
+  transition: transform 4s ease;
+}
+
+
+/* INHALE — lotus opens */
+.breath-outer.inhale .lotus {
+  transform: scale(1.5);
+}
+
+.breath-outer.inhale .lotus-glow {
+  transform: scale(1.5);
+  opacity: 1;
+}
+
+.breath-outer.inhale .petal {
+  opacity: 1;
+}
+
+
+/* HOLD — lotus stays open and glows */
+.breath-outer.hold .lotus {
+  transform: scale(1.22);
+}
+
+.breath-outer.hold .lotus-glow {
+  transform: scale(1.25);
+  opacity: 0.9;
+}
+
+
+/* EXHALE — lotus gently closes */
+.breath-outer.exhale .lotus {
+  transform: scale(0.85);
+}
+
+.breath-outer.exhale .lotus-glow {
+  transform: scale(0.8);
+  opacity: 0.5;
+}
+
+
+/* Breathing instruction */
+.breath-inner-label {
+  position: relative;
+  z-index: 20;
+  font-family: var(--font-header);
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.lotus-breath-visual {
+  z-index: 1;
+}
+
+.breath-inner-label {
+  z-index: 20;
+}
 /* Exhale — circle contracts */
 .breath-outer.exhale {
   animation: breath-contract 6s ease-in-out forwards;

@@ -18,9 +18,42 @@
   
   <!-- Custom Stylesheets -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="auth-entrance.css">
+  <script src="auth-entrance.js" defer></script>
 </head>
 <body>
+<!-- CINEMATIC ENTRANCE -->
+<div id="cinematic-entrance" class="cinematic-entrance">
+  <canvas id="thoughts-canvas"></canvas>
+  <div class="auth-atmosphere"></div>
 
+  <div class="auth-lake-container">
+    <div class="auth-lake"></div>
+  </div>
+
+  <div class="auth-content">
+    <div class="auth-namaste">🙏 Namaste.</div>
+    <div class="auth-title">ThinkSaathi</div>
+    <div class="auth-tagline">Because No Thought Should Be Faced Alone.</div>
+    <div class="auth-support-message">A quiet space for everything on your mind.<br><span style="font-size: 0.85em; opacity: 0.8;">Pause. Breathe. Reflect. Find clarity.</span></div>
+    
+    <div class="auth-cta-wrapper">
+      <button id="google-signin-btn" class="auth-google-btn">
+        <span class="auth-google-icon">G</span>
+        Continue with Google
+      </button>
+      <div id="auth-error-msg" class="auth-error-msg"></div>
+      
+      <div class="auth-trust-indicators">
+        <div class="auth-trust-item">🔒 Private by design</div>
+        <div class="auth-trust-item">🌱 Made for students</div>
+        <div class="auth-trust-item">🤝 Judgment-free</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app-wrapper" style="opacity: 0; pointer-events: none; position: absolute; width: 100%; transition: opacity 1s ease, visibility 1s ease; visibility: hidden;">
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toast-container" aria-live="polite"></div>
 
@@ -61,15 +94,21 @@
         <button class="tab-btn" data-view="reset">Resets</button>
       </nav>
 
-      <!-- Safe Space Crisis Support Button -->
-      <button class="safety-btn" id="safety-alert-btn" aria-haspopup="dialog" aria-label="Crisis Helplines Info">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        Crisis Support
-      </button>
+      <div style="display: flex; gap: 0.5rem;">
+        <!-- Sign Out Button -->
+        <button class="safety-btn" id="signout-btn" aria-label="Sign Out" style="background: var(--surface); color: var(--text-main); border: 1px solid var(--border-light);">
+          Sign Out
+        </button>
+        <!-- Safe Space Crisis Support Button -->
+        <button class="safety-btn" id="safety-alert-btn" aria-haspopup="dialog" aria-label="Crisis Helplines Info">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          Crisis Support
+        </button>
+      </div>
     </div>
   </header>
 
@@ -82,7 +121,7 @@
       <!-- 1. Hero Section -->
       <div class="hero-card">
         <div class="hero-illustration">
-          <img src="./assets/images/hero_lotus.png" alt="Glowing Lotus Digital Sanctuary" style="max-width: 100%; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);">
+          <img src="../assets/images/hero_lotus.png" alt="Glowing Lotus Digital Sanctuary" style="max-width: 100%; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);">
         </div>
         <h1 class="hero-headline">Because No Thought Should Be Faced Alone.</h1>
         <p class="hero-subhead">
@@ -142,18 +181,52 @@
         </div>
       </div>
 
-      <!-- 5. Lotus Journey Progress -->
       <div class="lotus-journey-section">
-        <h3 class="section-title">Your Inner Journey</h3>
-        <div class="journey-visual">
-          <div class="journey-stage active">🌱<span>Seed</span></div>
-          <div class="journey-line"></div>
-          <div class="journey-stage">🌿<span>Growing Mind</span></div>
-          <div class="journey-line"></div>
-          <div class="journey-stage">🌸<span>Blooming Lotus</span></div>
-        </div>
-        <p class="journey-desc">Every moment of reflection helps your resilience grow.</p>
-      </div>
+  <h3 class="section-title">Your Inner Journey</h3>
+
+  <div class="journey-visual">
+    <div class="journey-stage active" id="journey-seed">
+      🌱
+      <span>Seed</span>
+    </div>
+
+    <div class="journey-line" id="journey-line-1"></div>
+
+    <div class="journey-stage" id="journey-growing">
+      🌿
+      <span>Growing Mind</span>
+    </div>
+
+    <div class="journey-line" id="journey-line-2"></div>
+
+    <div class="journey-stage" id="journey-blooming">
+      🌸
+      <span>Blooming Lotus</span>
+    </div>
+  </div>
+
+  <p class="journey-desc" id="journey-desc">
+    Every moment of reflection helps your resilience grow.
+  </p>
+
+  <div class="journey-progress">
+    <div class="journey-progress-text">
+      <span id="journey-progress-count">0</span> reflections completed
+    </div>
+
+    <div class="journey-progress-bar">
+      <div id="journey-progress-fill"></div>
+    </div>
+
+    <p id="journey-next-step">
+      Complete 3 reflections to reach Growing Mind.
+    </p>
+
+    <button class="btn-secondary" id="journey-reflection-btn">
+      ✓ Mark Reflection Complete
+    </button>
+  </div>
+</div>
 
       <!-- 6. Community (Coming Soon) -->
       <div class="community-placeholder-section">
@@ -417,9 +490,26 @@
 
           <!-- Dynamic Breathing Expansion Ring -->
           <div class="breath-outer" id="breathing-animation-container">
-            <div class="breath-circle" id="dynamic-breath-halo"></div>
-            <div class="breath-inner-label" id="breath-text-prompt">Inhale</div>
-          </div>
+
+  <div class="lotus-breath-visual" aria-hidden="true">
+    <div class="lotus-glow"></div>
+
+    <div class="lotus">
+      <div class="petal petal-1"></div>
+      <div class="petal petal-2"></div>
+      <div class="petal petal-3"></div>
+      <div class="petal petal-4"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-6"></div>
+      <div class="lotus-center"></div>
+    </div>
+  </div>
+
+  <div class="breath-inner-label" id="breath-text-prompt">
+    Inhale
+  </div>
+
+</div>
 
           <div class="session-countdown" id="player-time-left">03:00</div>
           <p class="session-benefit-reminder" id="player-instruction-caption">Gently close your right nostril with your thumb and draw air through your left nostril.</p>
@@ -630,36 +720,114 @@
     <path d="M12 15c-3 0-7-2-8-6c1 0 5 1 8 6Z" />
     <path d="M12 15c3 0 7-2 8-6c-1 0-5 1-8 6Z" />
   </svg>
+</div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-auth-compat.js"></script>
+ <!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-auth-compat.js"></script>
 
 <script>
   const firebaseConfig = {
-    apiKey: "YOUR_ACTUAL_API_KEY",
-    authDomain: "thinksaathi.firebaseapp.com",
-    projectId: "thinksaathi",
-    storageBucket: "thinksaathi.firebasestorage.app",
-    messagingSenderId: "669422399494",
-    appId: "1:669422399494:web:b4328c7dfed23111195387"
-  };
+  apiKey: "AIzaSyCBQqR3m5UZSAD-3D6ZkgQlwDtcXt3FKTQ",
+  authDomain: "thinksaathi.firebaseapp.com",
+  projectId: "thinksaathi",
+  storageBucket: "thinksaathi.firebasestorage.app",
+  messagingSenderId: "669422399494",
+  appId: "1:669422399494:web:b4328c7dfed23111195387"
+};
+ firebase.initializeApp(firebaseConfig);
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-  console.log("🔥 Firebase initialized");
+console.log("🔥 Firebase initialized successfully");
+console.log("🗄️ Firestore initialized successfully");
 </script>
+<script>
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
+  const googleSignInBtn = document.getElementById("google-signin-btn");
+  const signoutBtn = document.getElementById("signout-btn");
 
+  if (googleSignInBtn) {
+    googleSignInBtn.addEventListener("click", async () => {
+      try {
+        if(window.authEntrance) window.authEntrance.clearError();
+        googleSignInBtn.disabled = true;
+        googleSignInBtn.innerHTML = "<span>...</span> Signing in";
+
+        const result = await firebase.auth().signInWithPopup(googleProvider);
+        const user = result.user;
+
+        console.log("✅ Google Sign-In successful:", user.uid);
+        
+        // Reset button state for future
+        setTimeout(() => {
+          googleSignInBtn.disabled = false;
+          googleSignInBtn.innerHTML = "<span class=\"auth-google-icon\">G</span> Continue with Google";
+        }, 1000);
+        
+      } catch (error) {
+        console.error("❌ Google Sign-In failed:", error);
+        if(window.authEntrance) window.authEntrance.showError("We couldn't complete your sign-in. Please try again.");
+        if (googleSignInBtn) {
+          googleSignInBtn.disabled = false;
+          googleSignInBtn.innerHTML = "<span class=\"auth-google-icon\">G</span> Continue with Google";
+        }
+      }
+    });
+  }
+
+  if (signoutBtn) {
+    signoutBtn.addEventListener("click", async () => {
+      try {
+        await firebase.auth().signOut();
+        console.log("✅ Signed out successfully");
+      } catch (error) {
+        console.error("❌ Sign out failed:", error);
+      }
+    });
+  }
+
+ firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) {
+    console.log("👤 No user currently signed in");
+    if(window.authEntrance) window.authEntrance.show();
+    return;
+  }
+
+  console.log("👤 Logged in:", user.email);
+  console.log("🔑 User UID:", user.uid);
+  if(window.authEntrance) window.authEntrance.hide();
+
+  try {
+    // Reference to this specific user's profile document
+    const userRef = db.collection("users").doc(user.uid);
+
+    // Check whether the profile already exists
+    const userSnapshot = await userRef.get();
+
+    if (!userSnapshot.exists) {
+      // Create the profile for a first-time user
+      await userRef.set({
+        email: user.email || "",
+        displayName: user.displayName || "",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      console.log("🆕 ThinkSaathi profile created");
+    } else {
+      console.log("✅ ThinkSaathi profile already exists");
+    }
+
+  } catch (error) {
+    console.error("❌ Could not create/load user profile:", error);
+  }
+});
+</script>
 <!-- ThinkSaathi -->
 <script src="audio.js"></script>
 <script src="ai.js"></script>
 <script src="app.js"></script>
-
 </body>
 </html>
-
-<!-- THINKSAATHI SCRIPTS -->
-<script src="audio.js"></script>
-<script src="ai.js"></script>
-<script src="app.js"></script>

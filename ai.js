@@ -217,5 +217,5 @@ async generateResponse(userMsg) {
     }
 }
 }
-
+window.SaathiAI = SaathiAI;
 

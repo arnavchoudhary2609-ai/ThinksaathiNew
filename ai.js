@@ -175,37 +175,47 @@ class SaathiAI {
     return this.detectedCategory;
   }
 
-  // Generate an empathetic, contextual response
-  generateResponse(userMsg) {
+async generateResponse(userMsg) {
     this.messageCount++;
-    const category = this.analyzeMessage(userMsg);
-    const pool = this.responses[category];
 
-    // Cycle through responses to avoid repetition across the session
-    const index = (this.conversationHistory.length / 2) % pool.length;
-    let reply = pool[Math.floor(index)];
+    try {
+        const response = await fetch("https://thinksaathinew.onrender.com/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: userMsg,
+                history: this.conversationHistory
+            })
+        });
 
-    // Add mindfulness micro-tip for specific categories
-    if (category === 'overthinking') {
-      reply += "\n\n💡 *Saathi Tip*: Try our **Anulom Vilom** or **Bhramari Pranayama** breathing reset — it physically calms mental chatter in just a few minutes.";
-    } else if (category === 'academic_stress') {
-      reply += "\n\n💡 *Saathi Tip*: When exam stress hits, try the **Exam Calm Reset** or **Deep Belly Breathing** to reset your nervous system before studying.";
+        if (!response.ok) {
+            throw new Error(`Backend error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const reply = data.reply;
+
+        // Track conversation history for context
+        this.conversationHistory.push({
+            role: "user",
+            content: userMsg
+        });
+
+        this.conversationHistory.push({
+            role: "assistant",
+            content: reply
+        });
+
+        return reply;
+
+    } catch (error) {
+        console.error("ThinkSaathi AI error:", error);
+
+        return "I'm having a little trouble connecting right now. Please try again in a moment.";
     }
-
-    // After the 2nd message, offer a relevant feature suggestion if it's a distress category
-    const distressCategories = ['overthinking', 'academic_stress', 'loneliness', 'self_doubt', 'friendship', 'social_pressure', 'general_distress'];
-    if (this.messageCount >= 2 && distressCategories.includes(category)) {
-      const followUp = this.followUps[category] || this.followUps.general_distress;
-      // Only append if it's not already recently suggested
-      reply += followUp;
-    }
-
-    // Track conversation history for context
-    this.conversationHistory.push({ role: 'user', text: userMsg });
-    this.conversationHistory.push({ role: 'assistant', text: reply });
-
-    return reply;
-  }
+}
 }
 
-window.SaathiAI = SaathiAI;
+

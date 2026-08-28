@@ -672,7 +672,7 @@ class ThinkSaathiApp {
   }
 
   // --- 4. EMPATHETIC CHAT MESSENGER CONTROLLER ---
-  handleUserChatMessage(text) {
+  async handleUserChatMessage(text) {
     const chatScroller = document.getElementById('chat-scroller');
     if (!chatScroller) return;
 
@@ -691,12 +691,12 @@ class ThinkSaathiApp {
 
     chatScroller.scrollTop = chatScroller.scrollHeight;
 
-    setTimeout(() => {
+  setTimeout(async () => {
       // Hide loader
       if (typingIndicator) typingIndicator.style.display = 'none';
 
       // C. Generate AI Reply
-      const aiReply = this.ai.generateResponse(text);
+    const aiReply = await this.ai.generateResponse(text);
       const assistantBubble = document.createElement('div');
       assistantBubble.className = 'chat-msg assistant';
       

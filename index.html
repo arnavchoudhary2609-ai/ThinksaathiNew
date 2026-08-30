@@ -790,15 +790,38 @@ console.log("🗄️ Firestore initialized successfully");
   }
 
  firebase.auth().onAuthStateChanged(async (user) => {
-  if (!user) {
-    console.log("👤 No user currently signed in");
-    if(window.authEntrance) window.authEntrance.show();
-    return;
+ if (!user) {
+
+  console.log("👤 No user currently signed in");
+
+  if (window.thinkSaathiApp?.ai) {
+    window.thinkSaathiApp.ai.conversationHistory = [];
   }
 
-  console.log("👤 Logged in:", user.email);
-  console.log("🔑 User UID:", user.uid);
-  if(window.authEntrance) window.authEntrance.hide();
+  const chatScroller = document.getElementById("chat-scroller");
+  if (chatScroller) {
+    chatScroller.querySelectorAll(".chat-msg").forEach(msg => msg.remove());
+  }
+
+  if(window.authEntrance) window.authEntrance.show();
+
+  return;
+}
+
+
+console.log("👤 Logged in:", user.email);
+console.log("🔑 User UID:", user.uid);
+
+if (window.thinkSaathiApp?.ai) {
+  window.thinkSaathiApp.ai.conversationHistory = [];
+}
+
+const chatScroller = document.getElementById("chat-scroller");
+if (chatScroller) {
+  chatScroller.querySelectorAll(".chat-msg").forEach(msg => msg.remove());
+}
+
+if(window.authEntrance) window.authEntrance.hide();
 
   try {
     // Reference to this specific user's profile document

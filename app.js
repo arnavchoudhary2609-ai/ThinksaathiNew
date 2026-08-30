@@ -1069,6 +1069,7 @@ class ThinkSaathiApp {
 
 // Instantiate on document load
 document.addEventListener('DOMContentLoaded', () => {
-  const app = new ThinkSaathiApp();
-  app.init();
+window.thinkSaathiApp = new ThinkSaathiApp();
+
+window.thinkSaathiApp.init();
 });

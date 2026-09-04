@@ -17,11 +17,9 @@ app.get("/", (req, res) => {
 
 app.post("/chat", async (req, res) => {
   try {
-const { message, history = [] } = req.body;
+    const { message, history = [] } = req.body;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
-      contents: `
+    const contents = `
 You are ThinkSaathi, an empathetic AI companion for teenagers (13-19).
 Be warm, supportive and conversational.
 Do not sound robotic.
@@ -31,23 +29,43 @@ Previous conversation:
 ${history
   .map(item => `${item.role === "user" ? "User" : "ThinkSaathi"}: ${item.content}`)
   .join("\n")}
+
 User: ${message}
-`,
-    });
+`;
+
+    let response;
+
+    try {
+      response = await ai.models.generateContent({
+        model: "gemini-3.6-flash",
+        contents,
+      });
+    } catch (error) {
+      console.error("Gemini first attempt failed:", error);
+
+      if (error.status === 503) {
+        console.log("Gemini temporarily unavailable. Retrying in 2 seconds...");
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        response = await ai.models.generateContent({
+          model: "gemini-3.6-flash",
+          contents,
+        });
+      } else {
+        throw error;
+      }
+    }
 
     res.json({
       reply: response.text,
     });
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      reply: "Sorry, something went wrong.",
+    console.error("ThinkSaathi /chat error:", error);
+
+    res.status(error.status || 500).json({
+      reply: "Saathi is having a little trouble right now. Please try again in a moment."
     });
   }
-});
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`ThinkSaathi backend running on port ${PORT}`);
 });

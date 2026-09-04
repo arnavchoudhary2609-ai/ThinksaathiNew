@@ -676,43 +676,54 @@ class ThinkSaathiApp {
     const chatScroller = document.getElementById('chat-scroller');
     if (!chatScroller) return;
 
-    // A. Append user message bubble
+    // A. Append user message bubble immediately
     const userBubble = document.createElement('div');
     userBubble.className = 'chat-msg user';
     userBubble.innerHTML = `<p>${text}</p>`;
-    chatScroller.insertBefore(userBubble, document.getElementById('ai-typing-indicator'));
-    
+    chatScroller.insertBefore(
+        userBubble,
+        document.getElementById('ai-typing-indicator')
+    );
+
     // Auto scroll down
     chatScroller.scrollTop = chatScroller.scrollHeight;
 
-    // B. Trigger typing animation and mock response latency
+    // B. Show typing indicator immediately
     const typingIndicator = document.getElementById('ai-typing-indicator');
     if (typingIndicator) typingIndicator.style.display = 'flex';
 
     chatScroller.scrollTop = chatScroller.scrollHeight;
 
-  setTimeout(async () => {
-      // Hide loader
-      if (typingIndicator) typingIndicator.style.display = 'none';
+    try {
+        // C. Start AI generation immediately
+        const aiReply = await this.ai.generateResponse(text);
 
-      // C. Generate AI Reply
-    const aiReply = await this.ai.generateResponse(text);
-      const assistantBubble = document.createElement('div');
-      assistantBubble.className = 'chat-msg assistant';
-      
-      // Convert simple markdown styling (like *bold*) to tags
-      let formattedText = aiReply
-        .replace(/\*(.*?)\*/g, '<strong>$1</strong>')
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/\n/g, '<br>');
-      
-      assistantBubble.innerHTML = `<p>${formattedText}</p>`;
-      chatScroller.insertBefore(assistantBubble, typingIndicator);
+        // D. Hide typing indicator ONLY after AI responds
+        if (typingIndicator) typingIndicator.style.display = 'none';
 
-      chatScroller.scrollTop = chatScroller.scrollHeight;
-    }, 1800);
-  }
+        // E. Create AI response bubble
+        const assistantBubble = document.createElement('div');
+        assistantBubble.className = 'chat-msg assistant';
 
+        // Convert simple markdown styling to tags
+        let formattedText = aiReply
+            .replace(/\*(.*?)\*/g, '<strong>$1</strong>')
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>');
+
+        assistantBubble.innerHTML = `<p>${formattedText}</p>`;
+
+        chatScroller.insertBefore(assistantBubble, typingIndicator);
+
+        chatScroller.scrollTop = chatScroller.scrollHeight;
+
+    } catch (error) {
+        // Make sure typing indicator doesn't remain stuck
+        if (typingIndicator) typingIndicator.style.display = 'none';
+
+        console.error("Chat message error:", error);
+    }
+}
   // --- 5. 5-MINUTE SOMATIC RESET PLAYER ORCHESTRATOR ---
   launchResetSession(sessionType) {
     const config = this.sessionConfigs[sessionType];
